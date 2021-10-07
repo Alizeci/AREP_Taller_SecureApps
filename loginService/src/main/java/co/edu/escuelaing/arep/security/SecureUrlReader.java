@@ -1,4 +1,4 @@
-package co.edu.escuelaing.arep;
+package co.edu.escuelaing.arep.security;
 
 import java.io.*;
 import java.net.*;
@@ -13,17 +13,25 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
+/**
+ * Clase que gestiona accesos a otros Servicios, en este caso al de authenticación
+ * 
+ * @author Laura Izquierdo
+ */
 public class SecureUrlReader {
 
-	public static void main(String[] args) {
+	/**
+	 * Método que inicia un contexto autorizado por medio de un certificado
+	 * confiable y su contraseña para la comunicación segura entre los servidores
+	 */
+	public static void initSecureContext() {
 		try {
 
 			// Create a file and a password representation
 			File trustStoreFile = new File("keystores/myTrustStore");
-			char[] trustStorePassword = "567890".toCharArray();
+			char[] trustStorePassword = "123456".toCharArray();
 
 			// Load the trust store, the default type is "pkcs12", the alternative is "jks"
 			KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
@@ -35,23 +43,12 @@ public class SecureUrlReader {
 			// Itit the TrustManagerFactory using the trustStore object
 			tmf.init(trustStore);
 
-			// Print the trustManagers returned by the TMF
-			// only for debugging
-			for (TrustManager t : tmf.getTrustManagers()) {
-				System.out.println(t);
-			}
-
 			// Set the default global SSLContext so all the connections will use it
 			SSLContext sslContext = SSLContext.getInstance("TLS");
 			sslContext.init(null, tmf.getTrustManagers(), null);
 			SSLContext.setDefault(sslContext);
 
-			// We can now read this URL
-			readURL("https://localhost:4567/hello");
-
-			// This one can't be read because the Java default truststore has been
-			// changed.
-			readURL("https://www.google.com");
+			// Now, we can now read URLs
 
 		} catch (KeyStoreException ex) {
 			Logger.getLogger(SecureUrlReader.class.getName()).log(Level.SEVERE, null, ex);
@@ -68,9 +65,15 @@ public class SecureUrlReader {
 		}
 
 	}
-
-	public static void readURL(String sitetoread) {
+	
+	/**
+	 * Método que lee el contenido resultado de una petición GET sobre el servicio de authenticación
+	 * @param sitetoread - url del endpoint con params de autenticación
+	 * @return la respuesta y contenido de authService
+	 */
+	public static String readURL(String sitetoread) {
 		try {
+			System.out.println("Reading URL: " + sitetoread);
 			// Crea el objeto que representa una URL2
 			URL siteURL = new URL(sitetoread);
 			// Crea el objeto que URLConnection
@@ -99,11 +102,17 @@ public class SecureUrlReader {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 
 			String inputLine = null;
+			StringBuilder response = new StringBuilder();
 			while ((inputLine = reader.readLine()) != null) {
 				System.out.println(inputLine);
+				response.append(inputLine.trim());
 			}
+			reader.close();
+			return response.toString();
+
 		} catch (IOException x) {
 			System.err.println(x);
 		}
+		return "Forbidden, check your credentials!";
 	}
 }
