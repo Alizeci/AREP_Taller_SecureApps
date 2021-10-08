@@ -1,6 +1,6 @@
 ## Taller de Construcción de una Aplicación Web Segura
 
-Se construye una aplicación web segura que permite evidenciar principios de seguridad como autenticación, autorización e integridad de los usuarios, desde el cliente y en la comunicación entre los servicios a través de sus endpoints públicos.
+Se construye una **aplicación web segura** que permite evidenciar principios de seguridad como **autenticación**, **autorización** e **integridad** de los usuarios, desde el *cliente* y en la *comunicación entre los servicios* a través de sus endpoints públicos.
 
 ## Entendimiento 🎯
 
@@ -69,7 +69,7 @@ Adicionalmente, aunque se realizó el ejercicio con las mejores prácticas de cl
 + **Minimizar la divergencia** entre desarrollo y producción, permitiendo el **despliegue continuo** para una máxima agilidad.
 + **Escalar** sin cambios significativos en las herramientas, la arquitectura o las prácticas de desarrollo.
 
-Finalmente agregando una **base de datos** para almacenar las credenciales con el hash de la contraseña se puede escalar eficientemente, de momento solo tiene un único usuario, quemado en código.
+Finalmente agregando una **base de datos** para almacenar las credenciales con el hash de la contraseña se puede escalar eficientemente, de momento solo tiene un único usuario, quemado en código. Así será posible crear nuevos usuarios que también sean autorizados.
 
 ## ![AWS](https://img.icons8.com/color/38/000000/amazon-web-services.png) Video experimental en AWS
 
